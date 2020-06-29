@@ -23,8 +23,6 @@ async function searchMeal(e) {
       );
       const data = await res.json();
 
-      console.log(data);
-
       resultHeading.innerHTML = `<h2>Search results for '${term}':</h2>`;
 
       if (data.meals === null) {
@@ -83,8 +81,6 @@ function addMealToDom(meal) {
     }
   }
 
-  console.log(ingredients);
-
   single_mealEl.innerHTML = `
     <div class='single-meal'>
       <h1>${meal.strMeal}</h1>
@@ -104,6 +100,26 @@ function addMealToDom(meal) {
   `;
 }
 
+// Get random meal
+async function randomMeal() {
+  // Clear meals in heading
+  mealsEl.innerHTML = '';
+  resultHeading.innerHTML = '';
+
+  try {
+    const res = await fetch(
+      'https://www.themealdb.com/api/json/v1/1/random.php'
+    );
+
+    const data = await res.json();
+    const meal = data.meals[0];
+
+    addMealToDom(meal);
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 // Event listeners
 submit.addEventListener('submit', searchMeal);
 mealsEl.addEventListener('click', (e) => {
@@ -120,3 +136,5 @@ mealsEl.addEventListener('click', (e) => {
     getMealById(mealID);
   }
 });
+
+random.addEventListener('click', randomMeal);
